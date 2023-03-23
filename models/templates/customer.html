@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="../static/styles/common.css">
+        <link rel="stylesheet" href="../static/styles/footer_n.css">
+        <link rel="stylesheet" href="../static/styles/header.css">
+        <link rel="stylesheet" href="../static/styles/message_div.css">
+        <link rel="stylesheet" href="../static/styles/profile.css">
+        <link rel="icon" href="../static/images/frmr.png">
+        <title>Frmr'sMrkt</title>
+    </head>
+    <body>
+        <header>
+
+            <h2 onclick="location.href='{{ url_for('home') }}'">Frmr'sMrkt</h2>
+        </header>
+        <img class="logo" src="../static/images/frmr.png" alt="logo">
+        <div class="page-title"><h3>Add a profile(For Customers)</h3></div>
+        <div class="msg-div">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+        <div class="profile-form">
+            <form method="POST" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+
+                {{ form.username.label() }}
+                {{ form.username(placeholder='First Name') }}
+
+                {{ form.email.label() }}
+                {{ form.email(placeholder='E-mail') }}
+
+                {{ form.password.label() }}
+                {{ form.password(placeholder='Password') }}
+
+                {{ form.password1.label() }}
+                {{ form.password1(placeholder='Confirm password') }}
+
+                {{ form.contact.label() }}
+                {{ form.contact(placeholder='Contact') }}
+
+                {{ form.profile_pic.label() }}
+                {{ form.profile_pic(class='form-control', type='file', placeholder='Farm logo') }}
+
+                {{ form.submit.label() }}
+                {{ form.submit(class='form-control', placeholder='Save profile') }}
+            </form>
+        </div>
+        <footer>
+            <h5>Frmr's Mrkt</h5>
+        </footer>
+    </body>
+</html>

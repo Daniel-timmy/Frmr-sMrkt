@@ -1,0 +1,31 @@
+.fixed-button {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 9999;
+    background-color: transparent;
+    border-radius: 40px;
+    border: 0px;
+}
+.fixed-button:hover {
+    background-color:rgb(87, 152, 22);
+}
+
+.img-btn {
+    height: 50px;
+    width: 50px;
+    vertical-align: middle;
+}
+.welcome h2 {
+    font-family:Georgia, 'Times New Roman', Times, serif;
+    text-align: center;
+    color: green;
+}
+.welcome h4 {
+    text-align: center;
+}   
+.welcome {
+    height: 100px;
+    width: 100%;
+}
+

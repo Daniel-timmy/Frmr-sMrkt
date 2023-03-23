@@ -1,0 +1,12 @@
+footer {
+    background-color: gray;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    margin-bottom: 0px;
+    padding-top: 10px;   
+}
+footer h5{
+    text-align: center;
+    color: green;
+}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="../static/styles/common.css">
+        <link rel="stylesheet" href="../static/styles/footer_n.css">
+        <link rel="stylesheet" href="../static/styles/header.css">
+        <link rel="stylesheet" href="../static/styles/profile.css">
+        <link rel="icon" href="../static/images/frmr.png">
+        <title>Frmr'sMrkt</title>
+    </head>
+    <body>
+        <header>
+
+            <h2 onclick="location.href='{{ url_for('home') }}'">Frmr'sMrkt</h2>
+        </header>
+        <img class="logo" src="../static/images/frmr.png" alt="logo">
+        <div class="page-title"><h3>Login</h3></div>
+        <div class="profile-form">
+            <form method="POST" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+
+                {{ form.email.label() }}
+                {{ form.email(placeholder='E-mail') }}
+
+                {{ form.password.label() }}
+                {{ form.password(placeholder='Password') }}
+
+                {{ form.submit.label() }}
+                {{ form.submit(class='form-control', placeholder='Save profile') }}
+
+            </form>
+        </div>
+        <footer>
+            <h5>Frmr's Mrkt</h5>
+        </footer>
+    </body>
+</html>

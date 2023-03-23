@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" href="../static/styles/new_post.css">
+        <link rel="stylesheet" href="../static/styles/new_post.css">
+        <link rel="stylesheet" href="../static/styles/footer_n.css">
+        <link rel="stylesheet" href="../static/styles/common.css">
+        <link rel="stylesheet" href="../static/styles/header.css">
+        <link rel="icon" href="../static/images/frmr.png">
+        <title>Frmr'sMrkt</title>
+    </head>
+    <body>
+        <header>
+            
+            <h2 onclick="location.href='{{ url_for('home') }}'">Frmr'sMrkt</h2>
+        </header>
+        <img class="logo" src="../static/images/frmr.png" alt="logo">
+        <div class="page-title"><h3>Add a new product</h3></div>
+        <div class="post-form">
+
+            <form method="POST" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+
+                {{ form.images.label() }}
+                {{ form.images(class='form-control', type='file', placeholder='Product image') }}
+
+                {{ form.price.label() }}
+                {{ form.price(class='form-control', placeholder='Price:') }}
+
+                {{ form.farm_name.label() }}
+                {{ form.farm_name(class='form-control', placeholder='Farm name') }}
+
+                {{ form.product_name.label() }}
+                {{ form.product_name(class='form-control', placeholder='Product name') }}
+
+                {{ form.contact.label() }}
+                {{ form.contact(class='form-control', placeholder='Contact(WhatsApp):') }}
+
+                {{ form.state.label() }}
+                {{ form.state(class='form-control', placeholder='Location of farm') }}
+
+                {{ form.submit.label() }}
+                {{ form.submit(class='form-control', placeholder='Submit') }}
+
+            </form>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+    </body>
+    <footer>
+        <h5>Frmr's Mrkt</h5>
+    </footer>
+</html>

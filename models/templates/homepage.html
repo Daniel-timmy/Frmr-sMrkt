@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="../static/styles/common.css">
+        <link rel="stylesheet" href="../static/styles/footer.css">
+        <link rel="stylesheet" href="../static/styles/header.css">
+        <link rel="stylesheet" href="../static/styles/images.css">
+        <link rel="stylesheet" href="../static/styles/homepage.css">
+        <link rel="icon" href="../static/images/frmr.png">
+        <title>Frmr'sMrkt</title>
+    </head>
+    <body>
+        <header>
+            <img class="logo" src="../static/images/frmr.png" alt="logo">
+            <h2 onclick="location.href='{{ url_for('home') }}'">Frmr'sMrkt</h2>
+            <img class="profile" onclick="location.href='{{ url_for('saved_profile') }}'" src="../static/images/profile.png" alt="profile">
+
+            <button class="login"  onclick="location.href='{{ url_for('login') }}'">
+                Log in
+            </button>
+            <div class="dropdown">
+                <button class="register-dropbtn">Register</button>
+                <div class="dropbox-options">
+                    <a href="{{ url_for('profile') }}">As business</a>
+                    <a href="{{ url_for('customer') }}">As customer</a>
+                </div>
+            </div>
+        </header>
+        <div class="welcome">
+            <h2>No.1 Online  marketplace for local farmers.</h2>
+            <h4>Sign up to get the full experience</h4>
+        </div>
+        <div class="products-images">
+            {% for (item, img) in zip(products, image) %}
+                <section>
+                    <img src="data:{{ mimetype }};base64,{{ img }}" alt="1">
+                    <div>
+                        <h5>{{ item.price }}</h5>
+                        <h5>{{ item.farm_name }}</h5>
+                    </div>
+                    <h6>{{ item.product_info }}</h6>
+                </section>
+            {% endfor %}
+        </div>
+        <button class="fixed-button"  onclick="location.href='{{ url_for('product') }}'">
+                <img class="img-btn" src="../static/images/add.png" alt="add-icon">
+        </button>
+        <footer>
+            <h5>Frmr's Mrkt</h5>
+        </footer>
+    </body>
+</html>
