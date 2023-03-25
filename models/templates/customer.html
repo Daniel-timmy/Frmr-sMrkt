@@ -31,7 +31,7 @@
                 {{ form.hidden_tag() }}
 
                 {{ form.username.label() }}
-                {{ form.username(placeholder='First Name') }}
+                {{ form.username(placeholder='User Name') }}
 
                 {{ form.email.label() }}
                 {{ form.email(placeholder='E-mail') }}
@@ -46,10 +46,10 @@
                 {{ form.contact(placeholder='Contact') }}
 
                 {{ form.profile_pic.label() }}
-                {{ form.profile_pic(class='form-control', type='file', placeholder='Farm logo') }}
+                {{ form.profile_pic(type='file', placeholder='Farm logo') }}
 
                 {{ form.submit.label() }}
-                {{ form.submit(class='form-control', placeholder='Save profile') }}
+                {{ form.submit(placeholder='Save profile') }}
             </form>
         </div>
         <footer>

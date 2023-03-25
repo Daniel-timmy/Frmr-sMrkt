@@ -35,11 +35,18 @@
             {% for (item, img) in zip(products, image) %}
                 <section>
                     <img src="data:{{ mimetype }};base64,{{ img }}" alt="1">
-                    <div>
-                        <h5>{{ item.price }}</h5>
-                        <h5>{{ item.farm_name }}</h5>
+                    <div class="widget">
+                        Price:{{ item.price }}
                     </div>
-                    <h6>{{ item.product_info }}</h6>
+                    <div class="widget">
+                        Farm name: {{ item.farm_name }}
+                    </div>
+                    <div class="widget">
+                        Contact: {{ item.contact }}
+                    </div>
+                    <div class="widget">
+                        Buy
+                    </div>
                 </section>
             {% endfor %}
         </div>

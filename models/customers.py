@@ -1,7 +1,6 @@
 from models.base_model import FarmModel, Base
 from sqlalchemy import Column, String, INTEGER, LargeBinary
-from sqlalchemy.orm import relationship
-from models import bcrypt, login_manager
+from models import login_manager
 from flask_login import UserMixin
 
 
@@ -27,9 +26,11 @@ class Customers(FarmModel, Base, UserMixin):
 
     @password.setter
     def password(self, plain_password):
+        from models import bcrypt
         self.password_hash = bcrypt.generate_password_hash(plain_password).decode('utf-8')
 
     def check_password(self, attempted_password):
+        from models import bcrypt
         return bcrypt.check_password_hash(self.password_hash, attempted_password)
 
 

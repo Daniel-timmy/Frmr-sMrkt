@@ -1,8 +1,16 @@
 .msg-div {
     height: 15px;
     width: 100%;
+    display: none;
+    text-align: center;
 }
 
 .msg-div p {
     color: black;
+    text-align: center;
+    
+}
+
+.msg-div:not(:empty) {
+    display: inline;
 }

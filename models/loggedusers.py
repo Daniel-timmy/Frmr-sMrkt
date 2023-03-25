@@ -1,10 +1,8 @@
-import bcrypt
-
-from models import login_manager
 from models.base_model import FarmModel, Base
 from sqlalchemy import Column, String, INTEGER, LargeBinary
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin
+from models import login_manager
 
 
 @login_manager.user_loader
@@ -35,7 +33,11 @@ class LoggedUsers(FarmModel, Base, UserMixin):
 
     @password.setter
     def password(self, plain_password):
+        """generate a secure password hash"""
+        from models import bcrypt
         self.password_hash = bcrypt.generate_password_hash(plain_password).decode('utf-8')
 
     def check_password(self, attempted_password):
+        """confirms if input password matches the hash stored"""
+        from models import bcrypt
         return bcrypt.check_password_hash(self.password_hash, attempted_password)

@@ -2,9 +2,7 @@ from datetime import datetime
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from models import storage
-import models
 import uuid
-from flask_wtf import FlaskForm
 
 Base = declarative_base()
 
@@ -21,6 +19,7 @@ class FarmModel:
 
     def save(self):
         """saves a newly created object or updates an old object"""
+        import models
         models.storage.new(self)
         models.storage.save()
 

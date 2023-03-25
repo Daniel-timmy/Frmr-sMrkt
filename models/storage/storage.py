@@ -1,11 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import Base
-from models.products import Products
-from models.users import Users
-from models.loggedusers import LoggedUsers
-
-classes = {"Products": Products, "Users": Users, "LoggedUsers": LoggedUsers}
 
 
 class DBStorage:
@@ -37,11 +32,37 @@ class DBStorage:
         """delete from the current database session"""
         self.__session.delete(obj)
 
-    def get(self):
+    def get(self, attr, cls=None):
         """returns a single object"""
+        objs = self.all(cls)
+
+        for obj in objs.values():
+            print(obj.username)
+            if attr in obj.to_dict().values():
+
+                return True
+        return False
+
+    def get_obj(self, attr, cls=None):
+        """returns a single object"""
+        objs = self.all(cls)
+
+        for obj in objs.values():
+            print(obj.username)
+            if attr in obj.to_dict().values():
+
+                return obj
+        return False
 
     def all(self, cls=None):
         """gets all objects form the database"""
+        from models.products import Products
+        from models.users import Users
+        from models.customers import Customers
+        from models.loggedusers import LoggedUsers
+        classes = \
+            {"Products": Products, "Users": Users, "LoggedUsers": LoggedUsers, "Customers": Customers}
+
         obj_dict = {}
         if cls in classes.values():
             objs = self.__session.query(cls).all()
