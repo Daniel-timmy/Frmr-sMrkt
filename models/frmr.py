@@ -91,7 +91,7 @@ def login():
             if requested_user.check_password(attempted_password=form.password.data):
                 login_user(requested_user)
                 flash('You are successfully logged in {}'
-                      .format(requested_user.username), category='success')
+                      .format(requested_user.business_name), category='success')
                 return redirect(url_for('home'))
         if requested_customer:
             if requested_customer.check_password(attempted_password=form.password.data):
@@ -103,17 +103,19 @@ def login():
             flash('Wrong email or password', category='failed')
     return render_template('login.html', form=form)
 
+
 @app.route('/reviews', strict_slashes=False)
 def reviews():
 
     return render_template('reviews.html')
+
 
 @app.route('/saved_profile', strict_slashes=False)
 @login_required
 def saved_profile():
     """renders the saved profile template"""
 
-    return render_template('saved_profile.html', user=current_user)
+    return render_template('saved_profile.html', user=current_user, company_logo=base64.b64encode(current_user.company_logo).decode('utf-8'), mimetype='jpeg')
 
 
 @app.route('/profile', methods=['GET', 'POST'], strict_slashes=False)
@@ -143,7 +145,8 @@ def profile():
         new_business.company_logo = file.read()
 
         new_business.save()
-        return redirect(url_for('saved_profile'))
+        login_user(new_business)
+        return redirect(url_for('home'))
     if form.errors != {}:
         for err in form.errors.values():
             flash('There was an error {}'.format(err))

@@ -2,9 +2,17 @@ from sqlalchemy.orm import relationship
 
 from models.base_model import FarmModel, Base
 from sqlalchemy import Column, String, INTEGER, LargeBinary
+from models import login_manager
+from flask_login import UserMixin
 
 
-class Business(FarmModel, Base):
+@login_manager.user_loader
+def load_user(business_id):
+    from models import storage
+    return storage.get_one(cls=Business, id=business_id)
+
+
+class Business(FarmModel, Base, UserMixin):
     """Products class"""
     __tablename__ = 'business'
     __table_args__ = {'extend_existing': True}
