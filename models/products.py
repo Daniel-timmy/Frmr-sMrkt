@@ -12,6 +12,6 @@ class Products(FarmModel, Base):
     farm_name = Column(String(60), nullable=False)
     product_name = Column(String(60), nullable=False)
     contact = Column(INTEGER, nullable=False)
-    logged_users_name = Column(String, ForeignKey('loggedUsers.farm_name'))
+    business = Column(String, ForeignKey('business.business_name'))
     users_name = Column(String, ForeignKey('users.farm_name'))
 

@@ -9,9 +9,9 @@ bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 
 from models.products import Products
-from models.loggedusers import LoggedUsers
 from models.customers import Customers
 from models.users import Users
+from models.registered_farm import Business
 
 storage = DBStorage()
 storage.reload()

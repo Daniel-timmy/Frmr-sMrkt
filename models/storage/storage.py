@@ -37,7 +37,7 @@ class DBStorage:
         objs = self.all(cls)
 
         for obj in objs.values():
-            print(obj.username)
+            # print(obj.username)
             if attr in obj.to_dict().values():
 
                 return True
@@ -48,20 +48,43 @@ class DBStorage:
         objs = self.all(cls)
 
         for obj in objs.values():
-            print(obj.username)
+            # print(obj.username)
             if attr in obj.to_dict().values():
 
                 return obj
-        return False
+        return None
+
+    def get_one(self, cls, id):
+        """
+        Returns the object based on the class name and its ID, or
+        None if not found
+        """
+        from models.products import Products
+        from models.users import Users
+        from models.customers import Customers
+        from models.registered_farm import Business
+        import models
+        classes = \
+            {"Products": Products, "Users": Users, "Business": Business, "Customers": Customers}
+
+        if cls not in classes.values():
+            return None
+
+        all_cls = models.storage.all(cls)
+        for value in all_cls.values():
+            if (value.id == id):
+                return value
+
+        return None
 
     def all(self, cls=None):
         """gets all objects form the database"""
         from models.products import Products
         from models.users import Users
         from models.customers import Customers
-        from models.loggedusers import LoggedUsers
+        from models.registered_farm import Business
         classes = \
-            {"Products": Products, "Users": Users, "LoggedUsers": LoggedUsers, "Customers": Customers}
+            {"Products": Products, "Users": Users, "Business": Business, "Customers": Customers}
 
         obj_dict = {}
         if cls in classes.values():

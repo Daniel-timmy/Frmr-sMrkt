@@ -14,25 +14,35 @@
         <header>
             <img class="logo" src="../static/images/frmr.png" alt="logo">
             <h2 onclick="location.href='{{ url_for('home') }}'">Frmr'sMrkt</h2>
-            <img class="profile" onclick="location.href='{{ url_for('saved_profile') }}'" src="../static/images/profile.png" alt="profile">
-
-            <button class="login"  onclick="location.href='{{ url_for('login') }}'">
-                Log in
-            </button>
-            <div class="dropdown">
-                <button class="register-dropbtn">Register</button>
-                <div class="dropbox-options">
-                    <a href="{{ url_for('profile') }}">As business</a>
-                    <a href="{{ url_for('customer') }}">As customer</a>
+            {% if current_user.is_authenticated %}
+                <img class="profile" onclick="location.href='{{ url_for('saved_profile') }}'" src="../static/images/profile.png" alt="profile">
+            {% endif %}
+            {% if current_user.is_authenticated %}
+                <button class="login"  onclick="location.href='{{ url_for('logout') }}'">
+                    Log out
+                </button>
+            {% endif %}
+            {% if not current_user.is_authenticated %}
+                <button class="login"  onclick="location.href='{{ url_for('login') }}'">
+                    Log in
+                </button>
+            {% endif %}
+            {% if not current_user.is_authenticated %}
+                <div class="dropdown">
+                    <button class="register-dropbtn">Register</button>
+                    <div class="dropbox-options">
+                        <a href="{{ url_for('profile') }}">As business</a>
+                        <a href="{{ url_for('customer') }}">As customer</a>
+                    </div>
                 </div>
-            </div>
+            {% endif %}
         </header>
         <div class="welcome">
             <h2>No.1 Online  marketplace for local farmers.</h2>
             <h4>Sign up to get the full experience</h4>
         </div>
         <div class="products-images">
-            {% for (item, img) in zip(products, image) %}
+            {% for (item, img) in zip(reversed(products), reversed(image)) %}
                 <section>
                     <img src="data:{{ mimetype }};base64,{{ img }}" alt="1">
                     <div class="widget">
@@ -44,7 +54,7 @@
                     <div class="widget">
                         Contact: {{ item.contact }}
                     </div>
-                    <div class="widget">
+                    <div class="widget" onclick="location.href='{{ url_for('reviews') }}'">
                         Buy
                     </div>
                 </section>

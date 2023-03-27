@@ -6,7 +6,8 @@ from flask_login import UserMixin
 
 @login_manager.user_loader
 def load_user(customer_id):
-    return Customers.query.get(customer_id)
+    from models import storage
+    return storage.get_one(cls=Customers, id=customer_id)
 
 
 class Customers(FarmModel, Base, UserMixin):

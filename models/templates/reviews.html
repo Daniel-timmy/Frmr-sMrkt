@@ -26,39 +26,7 @@
                 {% endif %}
             {% endwith %}
         </div>
-        <div class="profile-form">
-            <form method="POST" enctype="multipart/form-data">
-                {{ form.hidden_tag() }}
 
-                {{ form.business_name.label() }}
-                {{ form.business_name(placeholder='Business Name') }}
-
-                {{ form.email.label() }}
-                {{ form.email(placeholder='E-mail') }}
-
-                {{ form.password.label() }}
-                {{ form.password(placeholder='Password') }}
-
-                {{ form.password1.label() }}
-                {{ form.password1(placeholder='Confirm password') }}
-
-                {{ form.contact.label() }}
-                {{ form.contact(placeholder='Contact') }}
-
-                {{ form.location.label() }}
-                {{ form.location(placeholder='Location') }}
-
-                {{ form.company_logo.label() }}
-                {{ form.company_logo(class='form-control', type='file', placeholder='Company logo') }}
-
-                {{ form.about.label() }}
-                {{ form.about(placeholder='About farm') }}
-
-                {{ form.submit.label() }}
-                {{ form.submit(class='form-control', placeholder='Create business') }}
-
-            </form>
-        </div>
         <footer>
             <h5>Frmr's Mrkt</h5>
         </footer>
