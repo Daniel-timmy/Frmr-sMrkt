@@ -1,1 +1,46 @@
-<h1>hello</h1>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="../static/styles/landing_page.css">
+        <link rel="stylesheet" href="../static/styles/landing_header.css">
+        <link rel="stylesheet" href="../static/styles/images.css">
+        <link rel="icon" href="../static/images/frmr.png">
+        <title>Frmr'sMrkt</title>
+    </head>
+    <body>
+        <header>
+            <img class="logo" src="../static/images/frmr-nbg.png" alt="logo">
+            <h2 onclick="location.href='{{ url_for('home') }}'">Frmr'sMrkt</h2>
+            <button class="login"  onclick="location.href='{{ url_for('login') }}'">
+                Log in
+            </button>
+            
+            <div class="dropdown">
+                <button class="register-dropbtn">Register</button>
+                <div class="dropbox-options">
+                    <a href="{{ url_for('profile') }}">As business</a>
+                    <a href="{{ url_for('customer') }}">As customer</a>
+                </div>
+            </div>
+        </header>
+        <div style="margin: 0 auto; width: 50%; font-family:'Courier New', Courier, monospace; margin-top: 100px;">
+            <h1>Frmr's Mrkt</h1>
+        </div>
+        <div style="margin: 0 auto; width: 50%;">
+            <p>Do you want to be able to easily sell your produce online so that you can reach more customers and increase your revenue. Then, you are in the right spot!</p>
+            <p>This site provides a platform for farmers to have a branded stall in which they can display their goods in.</p>
+            <p>To use this, application you do not have to register. A user can easily upload a image of a product and provide necessary contact information</p>
+        </div>
+        <div style="margin: 0 auto; width: 50%; margin-top: 70px;">
+            <p>Right from a tender age i have been curious to know how this web infrastructures work. I joined alx with the enthusiasm</p>
+            <p>of satisfying that hunger to know. My name is Timileyin Ajayi, I am training to become a software engineer with the help of ALX.</p>
+            <p>I started this journey to do hard things.</p>
+        </div>
+
+        <button style="display: block; margin: 0 auto; margin-top: 120px; height: 60px; border-radius: 20px; background-color: black; color: aliceblue;">
+            <h3>Check us out!</h3>
+        </button>
+
+    </body>
+</html>

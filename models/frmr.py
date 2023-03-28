@@ -65,6 +65,7 @@ def customer():
         n_customer.contact = form.contact.data
 
         file = request.files['profile_pic']
+        mimetype = file.mimetype
         n_customer.profile_pic = file.read()
 
         n_customer.save()
@@ -142,6 +143,7 @@ def profile():
         new_business.about = form.about.data
         new_business.location = form.location.data
         file = request.files['company_logo']
+        mimetype = file.mimetype
         new_business.company_logo = file.read()
 
         new_business.save()
@@ -163,6 +165,7 @@ def product():
         new_user = Users()
 
         file = request.files['images']
+        mimetype = file.mimetype
         new_product.product_images = file.read()
 
         new_product.product_name = form.product_name.data
