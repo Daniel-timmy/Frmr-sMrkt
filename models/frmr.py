@@ -1,19 +1,74 @@
 """starts the web application"""
 import base64
-from flask import render_template, redirect, url_for, request, flash, get_flashed_messages
+from time import strftime
+from flask import render_template, redirect, url_for, request, flash
 from models import storage
 from models.products import Products
 from models.login_form import LoginForm
 from models.product_forms import ProductForm
 from models.register_forms import BusinessForm, CustomersForm
 from models.users import Users
+from models.filterform import FilterForm
 from models.registered_farm import Business
 from models.customers import Customers
+from models.reviews import Reviews
+from models.reviewForm import ReviewForm
 from flask_login import login_user, login_required, current_user, logout_user
 from models import app
 
-
 app.config['SECRET_KEY'] = '23bb8ccb2331455dc681eec4'
+
+
+def populate_homepage(products):
+    """populates the homepage"""
+
+    items = []
+    image = []
+    a_list = []
+    b_list = []
+    a_list_images = []
+    b_list_images = []
+
+    for product in products:
+        if product.business_name:
+            a_list.append(product)
+            a_list_images.append(base64.b64encode(product.product_images).decode('utf-8'))
+        else:
+            b_list.append(product)
+            b_list_images.append(base64.b64encode(product.product_images).decode('utf-8'))
+        items.append(product)
+        image.append(base64.b64encode(product.product_images).decode('utf-8'))
+    a_list.reverse()
+    b_list.reverse()
+    a_list_images.reverse()
+    b_list_images.reverse()
+    items = a_list + b_list
+    image = a_list_images + b_list_images
+
+    return items, image
+
+
+def filter_products(group, field):
+    """takes in two parameter by which to filter the displayed products"""
+    products = storage.all(Products).values()
+    filtered_products = []
+    if group == 'products':
+        for product_n in products:
+            if product_n.product_name is not None and product_n.product_name.lower() == field:
+                filtered_products.append(product_n)
+
+    elif group == 'business':
+        for product_n in products:
+            if product_n.business_name is not None and product_n.business_name.lower() == field:
+                filtered_products.append(product_n)
+
+    elif group == 'state':
+        for product_n in products:
+            if product_n.business is not None and product_n.business.location.lower() == field:
+                filtered_products.append(product_n)
+    else:
+        return products
+    return filtered_products
 
 
 @app.teardown_appcontext
@@ -22,17 +77,48 @@ def close_db(error):
     storage.close()
 
 
-@app.route('/', strict_slashes=False)
-@app.route('/home', strict_slashes=False)
+@app.route('/', methods=['GET', 'POST'], strict_slashes=False)
+def landing_page():
+    """landing page route"""
+    return render_template('index.html')
+
+
+@app.route('/home', methods=['GET', 'POST'], strict_slashes=False)
 def home():
     """homepage routing"""
     products = storage.all(Products).values()
-    items = []
-    image = []
-    for product in products:
-        items.append(product)
-        image.append(base64.b64encode(product.product_images).decode('utf-8'))
-    return render_template('homepage.html', products=items, image=image, zip=zip, mimetype='jpeg', reversed=reversed)
+
+    items, image = populate_homepage(products)
+
+    form = FilterForm()
+    if form.validate_on_submit():
+        f_b = form.filter_by.data.lower()
+        f_d = form.field.data.lower()
+        filter_list = ['state', 'business', 'products']
+        if f_d is None or f_b is None:
+            return redirect(url_for('home'))
+        elif f_b in filter_list:
+            return redirect(url_for('filter_product', group=f_b, field=f_d))
+        else:
+            return redirect(url_for('home'))
+    return render_template('homepage.html', form=form, products=items, image=image, zip=zip, mimetype='jpeg',
+                           reversed=reversed)
+
+
+@app.route('/filter/<group>/<field>', methods=['GET', 'POST'], strict_slashes=False)
+def filter_product(group, field):
+    """Displays products based on state filters"""
+    filtered_products = []
+    filtered_products = filter_products(group, field)
+    item, img_item = populate_homepage(filtered_products)
+    form = FilterForm()
+    if form.validate_on_submit():
+        f_b = form.filter_by.data.lower()
+        f_d = form.field.data.lower()
+        return redirect(url_for('filter_product', group=f_b, field=f_d))
+
+    return render_template('homepage.html', form=form, products=item, image=img_item, zip=zip, mimetype='jpeg',
+                           reversed=reversed)
 
 
 @app.route('/upload', strict_slashes=False)
@@ -81,10 +167,10 @@ def customer():
 @app.route('/login', methods=['GET', 'POST'], strict_slashes=False)
 def login():
     """renders the login template"""
-    # NEED TO FIX
     form = LoginForm()
     if form.validate_on_submit():
-        # THE PROBLEM LIES HERE
+        email = form.email.data
+        password = form.password.data
         requested_user = storage.get_obj(attr=form.email.data, cls=Business)
         requested_customer = storage.get_obj(attr=form.email.data, cls=Customers)
         if requested_user:
@@ -101,22 +187,58 @@ def login():
                       .format(requested_customer.username), category='success')
                 return redirect(url_for('home'))
         else:
-            flash('Wrong email or password', category='failed')
+            flash('Wrong email or password', category='danger')
     return render_template('login.html', form=form)
 
 
-@app.route('/reviews', strict_slashes=False)
-def reviews():
+@app.route('/reviews/<string:id>', methods=['GET', 'POST'], strict_slashes=False)
+def review(id):
+    obj = storage.get_one(cls=Products, id=id)
+    review_list = storage.all(cls=Reviews).values()
+    comment_list = []
 
-    return render_template('reviews.html')
+    form = ReviewForm()
+    for reviews in review_list:
+        if id == reviews.product_id:
+            comment_list.append(reviews)
+
+    if form.validate_on_submit():
+        user_review = Reviews()
+        if type(current_user) == Business:
+            user_review.reviewer = current_user.business_name
+        elif type(current_user) == Customers:
+            user_review.reviewer = current_user.username
+        else:
+            user_review.reviewer = "Anonymous"
+        user_review.product_id = id
+        user_review.comment = form.comment.data
+        user_review.save()
+
+        return redirect(url_for('review', id=id))
+
+    return render_template('reviews.html', product=obj,
+                           image=base64.b64encode(obj.product_images).decode('utf-8'),
+                           comments=comment_list, form=form, strftime=strftime, reversed=reversed)
 
 
 @app.route('/saved_profile', strict_slashes=False)
 @login_required
 def saved_profile():
     """renders the saved profile template"""
+    businesses = storage.all(Business).values()
+    product_list = []
+    image = []
+    for business in businesses:
+        if business.business_name == current_user.business_name:
+            product_list = business.products.copy()
+            for prod in business.products:
+                print(prod)
+                image.append(base64.b64encode(prod.product_images).decode('utf-8'))
+    print(product_list)
 
-    return render_template('saved_profile.html', user=current_user, company_logo=base64.b64encode(current_user.company_logo).decode('utf-8'), mimetype='jpeg')
+    return render_template('saved_profile.html', user=current_user,
+                           company_logo=base64.b64encode(current_user.company_logo).decode('utf-8'),
+                           product=product_list, image=image, mimetype='jpeg', zip=zip)
 
 
 @app.route('/profile', methods=['GET', 'POST'], strict_slashes=False)
@@ -146,6 +268,11 @@ def profile():
         mimetype = file.mimetype
         new_business.company_logo = file.read()
 
+        untracked_products = storage.all(cls=Products).values()
+        for uproduct in untracked_products:
+            if uproduct.users_name == form.business_name.data:
+                new_business.products.append(uproduct)
+
         new_business.save()
         login_user(new_business)
         return redirect(url_for('home'))
@@ -162,7 +289,6 @@ def product():
     form = ProductForm()
     if form.validate_on_submit():
         new_product = Products()
-        new_user = Users()
 
         file = request.files['images']
         mimetype = file.mimetype
@@ -173,14 +299,22 @@ def product():
         new_product.contact = form.contact.data
         new_product.price = form.price.data
 
-        # i need to implement this to take care of different
-        # product entries with the same farm name and also if the
-        #  user already exist do not create
-        new_user.farm_name = form.farm_name.data
-        new_user.state = form.state.data
+        print(type(current_user) is Business)
+        print(type(current_user))
+        if current_user.is_authenticated and type(current_user) is Business:
+            new_product.business = current_user
+            print('yuioihgbn')
+        else:
+            if not storage.get(attr=form.farm_name.data, cls=Users):
+                new_user = Users()
+                new_user.farm_name = form.farm_name.data
+                new_user.state = form.state.data
+                new_user.save()
+
+            existing_user = storage.get_obj(attr=form.farm_name.data, cls=Users)
+            new_product.users = existing_user
 
         new_product.save()
-        new_user.save()
 
         return redirect(url_for('home'))
     if form.errors != {}:

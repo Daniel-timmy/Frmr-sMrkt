@@ -33,13 +33,11 @@ class DBStorage:
         self.__session.delete(obj)
 
     def get(self, attr, cls=None):
-        """returns a single object"""
+        """returns true if object exists, otherwise false"""
         objs = self.all(cls)
 
         for obj in objs.values():
-            # print(obj.username)
             if attr in obj.to_dict().values():
-
                 return True
         return False
 
@@ -63,6 +61,7 @@ class DBStorage:
         from models.users import Users
         from models.customers import Customers
         from models.registered_farm import Business
+        from models.reviews import Reviews
         import models
         classes = \
             {"Products": Products, "Users": Users, "Business": Business, "Customers": Customers}
@@ -83,8 +82,9 @@ class DBStorage:
         from models.users import Users
         from models.customers import Customers
         from models.registered_farm import Business
+        from models.reviews import Reviews
         classes = \
-            {"Products": Products, "Users": Users, "Business": Business, "Customers": Customers}
+            {"Products": Products, "Users": Users, "Business": Business, "Customers": Customers, "Reviews": Reviews}
 
         obj_dict = {}
         if cls in classes.values():

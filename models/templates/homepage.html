@@ -1,70 +1,201 @@
+
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <link rel="stylesheet" href="../static/styles/common.css">
-        <link rel="stylesheet" href="../static/styles/footer.css">
-        <link rel="stylesheet" href="../static/styles/header.css">
-        <link rel="stylesheet" href="../static/styles/images.css">
-        <link rel="stylesheet" href="../static/styles/homepage.css">
-        <link rel="icon" href="../static/images/frmr.png">
-        <title>Frmr'sMrkt</title>
-    </head>
-    <body>
-        <header>
-            <img class="logo" src="../static/images/frmr.png" alt="logo">
-            <h2 onclick="location.href='{{ url_for('home') }}'">Frmr'sMrkt</h2>
-            {% if current_user.is_authenticated %}
-                <img class="profile" onclick="location.href='{{ url_for('saved_profile') }}'" src="../static/images/profile.png" alt="profile">
-            {% endif %}
-            {% if current_user.is_authenticated %}
-                <button class="login"  onclick="location.href='{{ url_for('logout') }}'">
-                    Log out
-                </button>
-            {% endif %}
-            {% if not current_user.is_authenticated %}
-                <button class="login"  onclick="location.href='{{ url_for('login') }}'">
-                    Log in
-                </button>
-            {% endif %}
-            {% if not current_user.is_authenticated %}
-                <div class="dropdown">
-                    <button class="register-dropbtn">Register</button>
-                    <div class="dropbox-options">
-                        <a href="{{ url_for('profile') }}">As business</a>
-                        <a href="{{ url_for('customer') }}">As customer</a>
-                    </div>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="icon" href="../static/images/frmr.png">
+    <title>Frmr's Mrkt</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-success navbar-dark">
+        <div class="container">
+                <a href="{{ url_for('home') }}" class="navbar-brand">
+                    <img class="logo" src="../static/images/frmr.png" href="{{ url_for('home') }}" alt="logo">
+                </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navmenu">
+                <ul class="navbar-nav ms-auto">
+                {% if not current_user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a href="" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">Sign up</a>
+                        <ul class="dropdown-menu dropdown-menu-success">
+                            <li><a class="dropdown-item" href="{{ url_for('profile') }}">As Business</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('customer') }}">As customer</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
+                {% if not current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('login') }}" class="nav-link">Log in</a>
+                    </li>
+                {% endif %}
+                    <li class="nav-item">
+                        <a href="" class="nav-link">About</a>
+                    </li>
+
+                {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('logout') }}" class="nav-link">Log out</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('saved_profile') }}" class="nav-link">Profile</a>
+                    </li>
+                {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <section class="bg-light text-success p-5 text-center">
+        <div class="container">
+            <div class="d-sm-flex">
+                <div>
+                    <h1>Create a
+                        <span class="text-dark">Stall!</span></h1>
+                        <p>
+                            Do want to be able to easily <span class="text-warning h1">sell</span> your produce online so that you can reach <span class="text-warning h1">more customers</span> and increase your revenue. You are in the <span class="text-dark h3">right </span><span class="text-warning h1">Place.</span>
+                        </p>
                 </div>
-            {% endif %}
-        </header>
-        <div class="welcome">
-            <h2>No.1 Online  marketplace for local farmers.</h2>
-            <h4>Sign up to get the full experience</h4>
+                <!-- <img class="img-fluid " src="images/frmr.png" alt=""> -->
+            </div>
         </div>
-        <div class="products-images">
-            {% for (item, img) in zip(reversed(products), reversed(image)) %}
-                <section>
-                    <img src="data:{{ mimetype }};base64,{{ img }}" alt="1">
-                    <div class="widget">
-                        Price:{{ item.price }}
-                    </div>
-                    <div class="widget">
-                        Farm name: {{ item.farm_name }}
-                    </div>
-                    <div class="widget">
-                        Contact: {{ item.contact }}
-                    </div>
-                    <div class="widget" onclick="location.href='{{ url_for('reviews') }}'">
-                        Buy
-                    </div>
-                </section>
-            {% endfor %}
+    </section>
+    <section class="bg-secondary text-dark p-5">
+        <div class="container">
+                <div class="row">
+                    <form method="POST" class="row gy-2 gx-3 align-items-left" style="color:white">
+                        {{ form.hidden_tag() }}
+
+                        <div class="col-sm">
+                            {{ form.filter_by.label() }}
+                            {{ form.filter_by(class="form-control", placeholder='State, Business or Products') }}
+                        </div>
+                        <div class="col-sm">
+                            {{ form.field.label() }}
+                            {{ form.field(class="form-control", placeholder='e.g apple, ogun, e.t.c') }}
+                        </div>
+                        <div class="col-sm btn-warning">
+                            {{ form.submit.label() }}
+                            {{ form.submit(class="form-control btn btn-success") }}
+                        </div>
+                    </form>
+                </div>
         </div>
-        <button class="fixed-button"  onclick="location.href='{{ url_for('product') }}'">
-                <img class="img-btn" src="../static/images/add.png" alt="add-icon">
-        </button>
-        <footer>
-            <h5>Frmr's Mrkt</h5>
-        </footer>
-    </body>
+    </section>
+    <section class="p-5">
+        <div class="container">
+            <div class="row row-cols-2 row-cols-md-5">
+                {% for (item, img) in zip(products, image) %}
+                    <div class="col-md">
+                        <div class="card bg-light text-dark mb-3">
+                            <img src="data:{{ mimetype }};base64,{{ img }}" class="card-img-top" style="height:200px" alt="...">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">{{ item.product_name }}</h5>
+                                <p class="card-text"><small>Price:{{ item.price }}</small></p>
+                                <p class="card-text"><small>Farm name: {{ item.farm_name }}</small></p>
+                                <p class="card-text"><small>Contact: {{ item.contact }}</small></small></p>
+                                <a href="{{ url_for('review', id=item.id) }}" class="btn btn-primary">Buy</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <a href="{{ url_for('product') }}" class="btn btn-primary btn-floating position-fixed bottom-0 end-0 mb-4 me-4" role="button">
+        <i class="bi bi-plus"></i>
+    </a>
+    <!-- Remove the container if you want to extend the Footer to full width. -->
+
+
+    <footer class="text-white text-center text-lg-start bg-dark">
+      <!-- Grid container -->
+      <div class="container p-4">
+        <!--Grid row-->
+        <div class="row mt-4">
+          <!--Grid column-->
+          <div class="col-lg-4 col-md-12 mb-4 mb-md-0">
+            <h5 class="text-uppercase mb-4">Job</h5>
+
+            <p>
+              Currently, I am open to any internship opportunity to further sharpen my programing skills
+            </p>
+            <p>
+                HIRE ME
+            </p>
+
+            <div class="mt-4">
+              <!-- Facebook -->
+              <a type="button" class="btn btn-floating btn-light btn-lg"><i class="fab fa-facebook-f"></i></a>
+              <!-- Dribbble -->
+              <a type="button" class="btn btn-floating btn-light btn-lg"><i class="fab fa-dribbble"></i></a>
+              <!-- Twitter -->
+              <a type="button" class="btn btn-floating btn-light btn-lg"><i class="fab fa-twitter"></i></a>
+              <!-- Google + -->
+              <a type="button" class="btn btn-floating btn-light btn-lg"><i class="fab fa-google-plus-g"></i></a>
+              <!-- Linkedin -->
+            </div>
+          </div>
+          <!--Grid column-->
+
+          <!--Grid column-->
+          <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+            <h5 class="text-uppercase mb-4 pb-1">Search something</h5>
+
+            <div class="form-outline form-white mb-4">
+              <input type="text" id="formControlLg" class="form-control form-control-lg" />
+              <label class="form-label" for="formControlLg">Search</label>
+            </div>
+
+            <ul class="fa-ul" style="margin-left: 1.65em;">
+              <li class="mb-3">
+                <span class="fa-li"><i class="fas fa-home"></i></span><span class="ms-2">Oke Odo, Ilorin Kwara State, Nigeria</span>
+              </li>
+              <li class="mb-3">
+                <span class="fa-li"><i class="fas fa-envelope"></i></span><span class="ms-2">ajayitimmy45@gmail.com</span>
+              </li>
+              <li class="mb-3">
+                <span class="fa-li"><i class="fas fa-phone"></i></span><span class="ms-2">+234 90 571 828 97</span>
+              </li>
+              <li class="mb-3">
+                <span class="fa-li"><i class="fas fa-envelope"></i></span><span class="ms-2">www.linkedin.com/in/ timileyin-ajayi-4535641a8</span>
+              </li>
+              <li class="mb-3">
+                <span class="fa-li"><i class="fas fa-envelope"></i></span><span class="ms-2">https://github.com/Daniel-timmy/Frmr-sMrkt</span>
+              </li>
+            </ul>
+          </div>
+          <!--Grid column-->
+
+          <!--Grid column-->
+          <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+            <h5 class="text-uppercase mb-4">About author</h5>
+              <div class="container">
+                  Right from a tender age i have been curious to know how this web infrastructures work. I joined alx with the enthusiasm
+                  of satisfying that hunger to know. My name is Timileyin Ajayi, I am training to become a software engineer with the help of ALX.
+                  I started this journey to do hard things.
+              </div>
+          </div>
+          <!--Grid column-->
+        </div>
+        <!--Grid row-->
+      </div>
+      <!-- Grid container -->
+
+      <!-- Copyright -->
+      <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+        © 2023 Copyright:
+        <a class="text-white" href="https://mdbootstrap.com/">Portfolio project</a>
+      </div>
+      <!-- Copyright -->
+    </footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+</body>
 </html>

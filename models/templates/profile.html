@@ -1,66 +1,209 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <link rel="stylesheet" href="../static/styles/common.css">
-        <link rel="stylesheet" href="../static/styles/footer.css">
-        <link rel="stylesheet" href="../static/styles/header.css">
-        <link rel="stylesheet" href="../static/styles/message_div.css">
-        <link rel="stylesheet" href="../static/styles/profile.css">
-        <link rel="icon" href="../static/images/frmr.png">
-        <title>Frmr'sMrkt</title>
-    </head>
-    <body>
-        <header>
-
-            <h2 onclick="location.href='{{ url_for('home') }}'">Frmr'sMrkt</h2>
-        </header>
-        <img class="logo" src="../static/images/frmr.png" alt="logo">
-        <div class="page-title"><h3>Add a profile for your Farm</h3></div>
-        <div class="msg-div">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <p>{{ message }}</p>
-                    {% endfor %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <title>Frmr's Mrkt</title>
+</head>
+<body class="text-center">
+    <nav class="navbar navbar-expand-lg bg-success navbar-dark">
+        <div class="container">
+                <a href="{{ url_for('home') }}" class="navbar-brand">
+                    <img class="logo" src="../static/images/frmr.png" href="{{ url_for('home') }}" alt="logo">
+                </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navmenu">
+                <ul class="navbar-nav ms-auto">
+                {% if not current_user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a href="" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">Sign up</a>
+                        <ul class="dropdown-menu dropdown-menu-success">
+                            <li><a class="dropdown-item" href="{{ url_for('profile') }}">As Business</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('customer') }}">As customer</a></li>
+                        </ul>
+                    </li>
                 {% endif %}
-            {% endwith %}
+                {% if not current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('login') }}" class="nav-link">Log in</a>
+                    </li>
+                {% endif %}
+                    <li class="nav-item">
+                        <a href="" class="nav-link">About</a>
+                    </li>
+
+                {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('logout') }}" class="nav-link">Log out</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('saved_profile') }}" class="nav-link">Profile</a>
+                    </li>
+                {% endif %}
+                </ul>
+            </div>
         </div>
-        <div class="profile-form">
-            <form method="POST" enctype="multipart/form-data">
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    <button type="button" class="ml-2 mb-1 close" data-dismiss="alert" aria-label="close">
+                        <span aria-hidden="true">&times</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="container">
+            <form method="POST" class="form-register" enctype="multipart/form-data">
+                <img class="mb-4 mt-5" src="../static/images/frmr.png">
+                <h1 class="h3 mb-3 font-weight-normal">
+                    Please a Business Account
+                </h1>
+                <br>
                 {{ form.hidden_tag() }}
 
-                {{ form.business_name.label() }}
-                {{ form.business_name(placeholder='Business Name') }}
+                <div class="col mb-3">
+                    {{ form.business_name.label() }}
+                    {{ form.business_name(class="form-control", placeholder='Business Name') }}
+                </div>
 
-                {{ form.email.label() }}
-                {{ form.email(placeholder='E-mail') }}
+                <div class="col mb-3">
+                    {{ form.email.label() }}
+                    {{ form.email(class="form-control", placeholder='E-mail') }}
+                </div>
 
-                {{ form.password.label() }}
-                {{ form.password(placeholder='Password') }}
+                <div class="col mb-3">
+                    {{ form.password.label() }}
+                    {{ form.password(class="form-control", placeholder='Password') }}
+                </div>
 
-                {{ form.password1.label() }}
-                {{ form.password1(placeholder='Confirm password') }}
+                <div class="col mb-3">
+                    {{ form.password1.label() }}
+                    {{ form.password1(class="form-control", placeholder='Confirm password') }}
+                </div>
 
-                {{ form.contact.label() }}
-                {{ form.contact(placeholder='Contact') }}
+                <div class="col mb-3">
+                    {{ form.contact.label() }}
+                    {{ form.contact(class="form-control", placeholder='Contact') }}
+                </div>
 
-                {{ form.location.label() }}
-                {{ form.location(placeholder='Location') }}
+                <div class="col mb-3">
+                    {{ form.location.label() }}
+                    {{ form.location(class="form-control", placeholder='Location') }}
+                </div>
 
-                {{ form.company_logo.label() }}
-                {{ form.company_logo(class='form-control', type='file', placeholder='Company logo') }}
+                <div class="col mb-3">
+                    {{ form.company_logo.label() }}
+                    {{ form.company_logo(class='form-control', type='file', placeholder='Company logo') }}
+                </div>
 
-                {{ form.about.label() }}
-                {{ form.about(placeholder='About farm') }}
-
-                {{ form.submit.label() }}
-                {{ form.submit(class='form-control', placeholder='Create business') }}
+                <div class="col mb-3">
+                    {{ form.about.label() }}
+                    {{ form.about(class="form-control", placeholder='About farm') }}
+                </div>
+                <div class="col mb-5">
+                        {{ form.submit.label() }}
+                        {{ form.submit(class='form-control btn btn-success', placeholder='Create business') }}
+                </div>
 
             </form>
+    </div>
+
+    <!-- Remove the container if you want to extend the Footer to full width. -->
+
+
+    <footer class="text-white text-center text-lg-start bg-dark">
+      <!-- Grid container -->
+      <div class="container p-4">
+        <!--Grid row-->
+        <div class="row mt-4">
+          <!--Grid column-->
+          <div class="col-lg-4 col-md-12 mb-4 mb-md-0">
+            <h5 class="text-uppercase mb-4">Job</h5>
+
+            <p>
+              Currently, I am open to any internship opportunity to further sharpen my programing skills
+            </p>
+            <p>
+                HIRE ME
+            </p>
+
+            <div class="mt-4">
+              <!-- Facebook -->
+              <a type="button" class="btn btn-floating btn-light btn-lg"><i class="fab fa-facebook-f"></i></a>
+              <!-- Dribbble -->
+              <a type="button" class="btn btn-floating btn-light btn-lg"><i class="fab fa-dribbble"></i></a>
+              <!-- Twitter -->
+              <a type="button" class="btn btn-floating btn-light btn-lg"><i class="fab fa-twitter"></i></a>
+              <!-- Google + -->
+              <a type="button" class="btn btn-floating btn-light btn-lg"><i class="fab fa-google-plus-g"></i></a>
+              <!-- Linkedin -->
+            </div>
+          </div>
+          <!--Grid column-->
+
+          <!--Grid column-->
+          <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+            <h5 class="text-uppercase mb-4 pb-1">Search something</h5>
+
+            <div class="form-outline form-white mb-4">
+              <input type="text" id="formControlLg" class="form-control form-control-lg" />
+              <label class="form-label" for="formControlLg">Search</label>
+            </div>
+
+            <ul class="fa-ul" style="margin-left: 1.65em;">
+              <li class="mb-3">
+                <span class="fa-li"><i class="fas fa-home"></i></span><span class="ms-2">Oke Odo, Ilorin Kwara State, Nigeria</span>
+              </li>
+              <li class="mb-3">
+                <span class="fa-li"><i class="fas fa-envelope"></i></span><span class="ms-2">ajayitimmy45@gmail.com</span>
+              </li>
+              <li class="mb-3">
+                <span class="fa-li"><i class="fas fa-phone"></i></span><span class="ms-2">+234 90 571 828 97</span>
+              </li>
+              <li class="mb-3">
+                <span class="fa-li"><i class="fas fa-envelope"></i></span><span class="ms-2">www.linkedin.com/in/ timileyin-ajayi-4535641a8</span>
+              </li>
+              <li class="mb-3">
+                <span class="fa-li"><i class="fas fa-envelope"></i></span><span class="ms-2">https://github.com/Daniel-timmy/Frmr-sMrkt</span>
+              </li>
+            </ul>
+          </div>
+          <!--Grid column-->
+
+          <!--Grid column-->
+          <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+            <h5 class="text-uppercase mb-4">About author</h5>
+              <div class="container">
+                  Right from a tender age i have been curious to know how this web infrastructures work. I joined alx with the enthusiasm
+                  of satisfying that hunger to know. My name is Timileyin Ajayi, I am training to become a software engineer with the help of ALX.
+                  I started this journey to do hard things.
+              </div>
+          </div>
+          <!--Grid column-->
         </div>
-        <footer>
-            <h5>Frmr's Mrkt</h5>
-        </footer>
-    </body>
+        <!--Grid row-->
+      </div>
+      <!-- Grid container -->
+
+      <!-- Copyright -->
+      <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+        © 2023 Copyright:
+        <a class="text-white" href="https://mdbootstrap.com/">Portfolio project</a>
+      </div>
+      <!-- Copyright -->
+    </footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+</body>
 </html>

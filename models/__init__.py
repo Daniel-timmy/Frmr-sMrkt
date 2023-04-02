@@ -12,6 +12,7 @@ from models.products import Products
 from models.customers import Customers
 from models.users import Users
 from models.registered_farm import Business
+from models.reviews import Reviews
 
 storage = DBStorage()
 storage.reload()

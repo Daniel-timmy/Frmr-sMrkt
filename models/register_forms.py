@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, EmailField, SelectMultipleField, PasswordField, SubmitField
+from wtforms import StringField, EmailField, PasswordField, SubmitField
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms.validators import Length, EqualTo, Email, DataRequired, ValidationError
 from models.registered_farm import Business
