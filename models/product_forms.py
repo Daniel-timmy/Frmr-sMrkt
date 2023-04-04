@@ -10,8 +10,8 @@ class ProductForm(FlaskForm):
                        validators=[DataRequired(), FileRequired(),
                                    FileAllowed(['jpg', 'png', 'jpeg'], 'Images only')])
     price = IntegerField(label='Price:', validators=[DataRequired()])
-    farm_name = StringField(label='Farm name:', validators=[DataRequired()])
-    state = StringField(label='State:', validators=[DataRequired()])
+    farm_name = StringField(label='Farm name:')
+    state = StringField(label='State:')
     product_name = StringField(label='Product name:', validators=[DataRequired()])
-    contact = StringField(label='Contact(WhatsApp):', validators=[DataRequired()])
+    contact = StringField(label='Contact(WhatsApp):')
     submit = SubmitField(label='Submit')

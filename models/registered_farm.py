@@ -17,7 +17,7 @@ class Business(FarmModel, Base, UserMixin):
     __tablename__ = 'business'
     __table_args__ = {'extend_existing': True}
 
-    business_name = Column(String, nullable=False)
+    name = Column(String, nullable=False)
     company_logo = Column(LargeBinary)
     email = Column(String(60), nullable=False)
     password_hash = Column(String(60), nullable=False)

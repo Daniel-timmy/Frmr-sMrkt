@@ -55,7 +55,7 @@
             {% for category, message in messages %}
                 <div class="alert alert-{{ category }}">
                     <button type="button" class="ml-2 mb-1 close" data-dismiss="alert" aria-label="close">
-                        <span aria-hidden="true">&times</span>
+                        <span aria-hidden="true">{{ message }}</span>
                     </button>
                 </div>
             {% endfor %}
@@ -73,20 +73,23 @@
                 {{ form.images.label() }}
                 {{ form.images(class='form-control', type='file', placeholder='Product image') }}
 
-                {{ form.price.label() }}
-                {{ form.price(class='form-control', placeholder='Price:') }}
-
-                {{ form.farm_name.label() }}
-                {{ form.farm_name(class='form-control', placeholder='Farm name') }}
-
                 {{ form.product_name.label() }}
                 {{ form.product_name(class='form-control', placeholder='Product name') }}
 
-                {{ form.contact.label() }}
-                {{ form.contact(class='form-control', placeholder='Contact(WhatsApp):') }}
+                {{ form.price.label() }}
+                {{ form.price(class='form-control', placeholder='Price:') }}
 
-                {{ form.state.label() }}
-                {{ form.state(class='form-control', placeholder='Location of farm') }}
+                {% if not current_user.is_authenticated %}
+                    {{ form.farm_name.label() }}
+                    {{ form.farm_name(class='form-control', placeholder='Farm name') }}
+
+                    {{ form.contact.label() }}
+                    {{ form.contact(class='form-control', placeholder='Contact(WhatsApp):') }}
+
+                    {{ form.state.label() }}
+                    {{ form.state(class='form-control', placeholder='Location of farm') }}
+                {% endif %}
+
 
                 <div class="col mb-5">
                     {{ form.submit.label() }}

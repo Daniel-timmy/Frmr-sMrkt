@@ -16,7 +16,7 @@ class Customers(FarmModel, Base, UserMixin):
     __table_args__ = {'extend_existing': True}
 
     # add state variable( no longer needed since the user can just use the state filter )
-    username = Column(String(60), nullable=False)
+    name = Column(String(60), nullable=False)
     email = Column(String(60), nullable=False)
     password_hash = Column(String(60), nullable=False)
     contact = Column(INTEGER, nullable=False)

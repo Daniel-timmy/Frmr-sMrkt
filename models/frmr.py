@@ -59,7 +59,7 @@ def filter_products(group, field):
 
     elif group == 'business':
         for product_n in products:
-            if product_n.business_name is not None and product_n.business_name.lower() == field:
+            if product_n.name is not None and product_n.name.lower() == field:
                 filtered_products.append(product_n)
 
     elif group == 'state':
@@ -145,7 +145,7 @@ def customer():
             flash('User with e-mail already exist')
             return redirect(url_for('customer'))
 
-        n_customer.username = form.username.data
+        n_customer.name = form.username.data
         n_customer.email = form.email.data
         n_customer.password = form.password.data
         n_customer.contact = form.contact.data
@@ -155,6 +155,7 @@ def customer():
         n_customer.profile_pic = file.read()
 
         n_customer.save()
+        login_user(n_customer)
         return redirect(url_for('home'))
 
     if form.errors != {}:
@@ -171,24 +172,30 @@ def login():
     if form.validate_on_submit():
         email = form.email.data
         password = form.password.data
-        requested_user = storage.get_obj(attr=form.email.data, cls=Business)
-        requested_customer = storage.get_obj(attr=form.email.data, cls=Customers)
-        if requested_user:
-            print(requested_user)
-            if requested_user.check_password(attempted_password=form.password.data):
-                login_user(requested_user)
-                flash('You are successfully logged in {}'
-                      .format(requested_user.business_name), category='success')
-                return redirect(url_for('home'))
-        if requested_customer:
-            if requested_customer.check_password(attempted_password=form.password.data):
-                login_user(requested_customer)
-                flash('You are successfully logged in {}'
-                      .format(requested_customer.username), category='success')
-                return redirect(url_for('home'))
+        requested_user = user_confirmation(email, password)
+
+        if requested_user is not None:
+            login_user(requested_user)
+            flash('You are successfully logged in {}'
+                  .format(requested_user.name), category='success')
+            return redirect(url_for('home'))
         else:
             flash('Wrong email or password', category='danger')
     return render_template('login.html', form=form)
+
+
+def user_confirmation(email, password):
+    requested_user = storage.get_obj(attr=email, cls=Business)
+    requested_customer = storage.get_obj(attr=email, cls=Customers)
+    if requested_user:
+        print(requested_user)
+        if requested_user.check_password(attempted_password=password):
+            return requested_user
+    elif requested_customer:
+        if requested_customer.check_password(attempted_password=password):
+            return requested_customer
+    else:
+        return None
 
 
 @app.route('/reviews/<string:id>', methods=['GET', 'POST'], strict_slashes=False)
@@ -204,10 +211,8 @@ def review(id):
 
     if form.validate_on_submit():
         user_review = Reviews()
-        if type(current_user) == Business:
-            user_review.reviewer = current_user.business_name
-        elif type(current_user) == Customers:
-            user_review.reviewer = current_user.username
+        if current_user.is_authenticated:
+            user_review.reviewer = current_user.name
         else:
             user_review.reviewer = "Anonymous"
         user_review.product_id = id
@@ -229,7 +234,7 @@ def saved_profile():
     product_list = []
     image = []
     for business in businesses:
-        if business.business_name == current_user.business_name:
+        if business.name == current_user.name:
             product_list = business.products.copy()
             for prod in business.products:
                 print(prod)
@@ -258,7 +263,7 @@ def profile():
             return redirect(url_for('profile'))
         new_business = Business()
 
-        new_business.business_name = form.business_name.data
+        new_business.name = form.business_name.data
         new_business.email = form.email.data
         new_business.password = form.password.data
         new_business.contact = form.contact.data
@@ -295,13 +300,18 @@ def product():
         new_product.product_images = file.read()
 
         new_product.product_name = form.product_name.data
-        new_product.farm_name = form.farm_name.data
-        new_product.contact = form.contact.data
+        if current_user.is_authenticated and hasattr(current_user, 'company_logo'):
+            new_product.farm_name = current_user.name
+            new_product.contact = current_user.contact
+        else:
+            new_product.farm_name = form.farm_name.data
+            new_product.contact = form.contact.data
+
         new_product.price = form.price.data
 
         print(type(current_user) is Business)
         print(type(current_user))
-        if current_user.is_authenticated and type(current_user) is Business:
+        if current_user.is_authenticated and hasattr(current_user, 'company_logo'):
             new_product.business = current_user
             print('yuioihgbn')
         else:
