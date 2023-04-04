@@ -16,59 +16,8 @@ from models.reviewForm import ReviewForm
 from flask_login import login_user, login_required, current_user, logout_user
 from models import app
 
+
 app.config['SECRET_KEY'] = '23bb8ccb2331455dc681eec4'
-
-
-def populate_homepage(products):
-    """populates the homepage"""
-
-    items = []
-    image = []
-    a_list = []
-    b_list = []
-    a_list_images = []
-    b_list_images = []
-
-    for product in products:
-        if product.business_name:
-            a_list.append(product)
-            a_list_images.append(base64.b64encode(product.product_images).decode('utf-8'))
-        else:
-            b_list.append(product)
-            b_list_images.append(base64.b64encode(product.product_images).decode('utf-8'))
-        items.append(product)
-        image.append(base64.b64encode(product.product_images).decode('utf-8'))
-    a_list.reverse()
-    b_list.reverse()
-    a_list_images.reverse()
-    b_list_images.reverse()
-    items = a_list + b_list
-    image = a_list_images + b_list_images
-
-    return items, image
-
-
-def filter_products(group, field):
-    """takes in two parameter by which to filter the displayed products"""
-    products = storage.all(Products).values()
-    filtered_products = []
-    if group == 'products':
-        for product_n in products:
-            if product_n.product_name is not None and product_n.product_name.lower() == field:
-                filtered_products.append(product_n)
-
-    elif group == 'business':
-        for product_n in products:
-            if product_n.name is not None and product_n.name.lower() == field:
-                filtered_products.append(product_n)
-
-    elif group == 'state':
-        for product_n in products:
-            if product_n.business is not None and product_n.business.location.lower() == field:
-                filtered_products.append(product_n)
-    else:
-        return products
-    return filtered_products
 
 
 @app.teardown_appcontext
@@ -86,6 +35,7 @@ def landing_page():
 @app.route('/home', methods=['GET', 'POST'], strict_slashes=False)
 def home():
     """homepage routing"""
+    from models.logic_function import populate_homepage
     products = storage.all(Products).values()
 
     items, image = populate_homepage(products)
@@ -108,6 +58,7 @@ def home():
 @app.route('/filter/<group>/<field>', methods=['GET', 'POST'], strict_slashes=False)
 def filter_product(group, field):
     """Displays products based on state filters"""
+    from models.logic_function import filter_products, populate_homepage
     filtered_products = []
     filtered_products = filter_products(group, field)
     item, img_item = populate_homepage(filtered_products)
@@ -168,6 +119,7 @@ def customer():
 @app.route('/login', methods=['GET', 'POST'], strict_slashes=False)
 def login():
     """renders the login template"""
+    from models.logic_function import user_confirmation
     form = LoginForm()
     if form.validate_on_submit():
         email = form.email.data
@@ -182,20 +134,6 @@ def login():
         else:
             flash('Wrong email or password', category='danger')
     return render_template('login.html', form=form)
-
-
-def user_confirmation(email, password):
-    requested_user = storage.get_obj(attr=email, cls=Business)
-    requested_customer = storage.get_obj(attr=email, cls=Customers)
-    if requested_user:
-        print(requested_user)
-        if requested_user.check_password(attempted_password=password):
-            return requested_user
-    elif requested_customer:
-        if requested_customer.check_password(attempted_password=password):
-            return requested_customer
-    else:
-        return None
 
 
 @app.route('/reviews/<string:id>', methods=['GET', 'POST'], strict_slashes=False)
@@ -309,11 +247,8 @@ def product():
 
         new_product.price = form.price.data
 
-        print(type(current_user) is Business)
-        print(type(current_user))
         if current_user.is_authenticated and hasattr(current_user, 'company_logo'):
             new_product.business = current_user
-            print('yuioihgbn')
         else:
             if not storage.get(attr=form.farm_name.data, cls=Users):
                 new_user = Users()
@@ -325,7 +260,6 @@ def product():
             new_product.users = existing_user
 
         new_product.save()
-
         return redirect(url_for('home'))
     if form.errors != {}:
         for err in form.errors.values():

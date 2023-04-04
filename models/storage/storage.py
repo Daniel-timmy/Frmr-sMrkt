@@ -46,7 +46,6 @@ class DBStorage:
         objs = self.all(cls)
 
         for obj in objs.values():
-            # print(obj.username)
             if attr in obj.to_dict().values():
 
                 return obj
@@ -64,7 +63,7 @@ class DBStorage:
         from models.reviews import Reviews
         import models
         classes = \
-            {"Products": Products, "Users": Users, "Business": Business, "Customers": Customers}
+            {"Products": Products, "Users": Users, "Business": Business, "Customers": Customers, 'Reviews': Reviews}
 
         if cls not in classes.values():
             return None

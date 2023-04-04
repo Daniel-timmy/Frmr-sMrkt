@@ -28,6 +28,7 @@ class Business(FarmModel, Base, UserMixin):
 
     @property
     def password(self):
+        """returns the password"""
         return self.password
 
     @password.setter

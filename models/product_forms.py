@@ -3,6 +3,7 @@ from wtforms import StringField, IntegerField, PasswordField, SubmitField
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms.validators import DataRequired
 
+
 # must add mimetype
 class ProductForm(FlaskForm):
     """the form class that processes product input from users"""
