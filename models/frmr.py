@@ -26,12 +26,13 @@ def close_db(error):
     storage.close()
 
 
-@app.route('/', methods=['GET', 'POST'], strict_slashes=False)
+@app.route('/landing', methods=['GET', 'POST'], strict_slashes=False)
 def landing_page():
     """landing page route"""
     return render_template('index.html')
 
 
+@app.route('/', methods=['GET', 'POST'], strict_slashes=False)
 @app.route('/home', methods=['GET', 'POST'], strict_slashes=False)
 def home():
     """homepage routing"""

@@ -4,5 +4,6 @@ from wtforms.validators import DataRequired
 
 
 class ReviewForm(FlaskForm):
+    """Handles users reviews"""
     comment = StringField(label='', validators=[DataRequired()])
     submit = SubmitField(label='')

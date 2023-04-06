@@ -22,20 +22,13 @@
                         <li class="nav-item">
                             <a href="{{ url_for('home') }}" class="nav-link text-dark">Home</a>
                         </li>
-                        {% if not current_user.is_authenticated %}
-                            <li class="nav-item dropdown">
-                                <a href="" class="nav-link dropdown-toggle text-dark" role="button" data-bs-toggle="dropdown" aria-expanded="false">Sign up</a>
-                                <ul class="dropdown-menu dropdown-menu-success">
-                                    <li><a class="dropdown-item" href="{{ url_for('profile') }}">As Business</a></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('customer') }}">As customer</a></li>
-                                </ul>
-                            </li>
-                        {% endif %}
-                        {% if not current_user.is_authenticated %}
-                            <li class="nav-item">
-                                <a href="{{ url_for('login') }}" class="nav-link text-dark">Log in</a>
-                            </li>
-                        {% endif %}
+                        <li class="nav-item dropdown">
+                            <a href="" class="nav-link dropdown-toggle text-dark" role="button" data-bs-toggle="dropdown" aria-expanded="false">Sign up</a>
+                            <ul class="dropdown-menu dropdown-menu-success">
+                                <li><a class="dropdown-item" href="{{ url_for('profile') }}">As Business</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('customer') }}">As customer</a></li>
+                            </ul>
+                        </li>
                         <li class="nav-item">
                             <a href="" class="nav-link text-dark">About</a>
                         </li>

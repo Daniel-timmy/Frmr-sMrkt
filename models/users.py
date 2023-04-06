@@ -8,7 +8,6 @@ class Users(FarmModel, Base):
     __tablename__ = 'users'
     __table_args__ = {'extend_existing': True}
 
-    # business_name = Column(String(60), nullable=False)
     farm_name = Column(String(60), nullable=False)
     state = Column(String(60), nullable=False)
     products = relationship("Products", backref="users", cascade="all, delete, delete-orphan")

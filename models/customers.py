@@ -11,7 +11,7 @@ def load_user(customer_id):
 
 
 class Customers(FarmModel, Base, UserMixin):
-    """class for registered users"""
+    """class for registered u"""
     __tablename__ = 'customers'
     __table_args__ = {'extend_existing': True}
 

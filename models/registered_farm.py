@@ -8,6 +8,7 @@ from flask_login import UserMixin
 
 @login_manager.user_loader
 def load_user(business_id):
+    """loads business accounts"""
     from models import storage
     return storage.get_one(cls=Business, id=business_id)
 
