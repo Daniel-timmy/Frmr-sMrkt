@@ -16,7 +16,6 @@ from models.reviewForm import ReviewForm
 from flask_login import login_user, login_required, current_user, logout_user
 from models import app
 
-
 app.config['SECRET_KEY'] = '23bb8ccb2331455dc681eec4'
 
 

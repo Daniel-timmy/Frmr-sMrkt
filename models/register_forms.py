@@ -12,14 +12,15 @@ class BusinessForm(FlaskForm):
     def validate_email(self, input_email):
         """it checks if a user with a particular email exist"""
         from models import storage
+
         user = storage.get(attr=input_email, cls=Business)
         if user:
-            raise ValidationError('User with e-mail already exist')
+              raise ValidationError('User with e-mail already exist')
 
     def validate_farm_name(self, input_farm_name):
         """it checks if a user with a particular farm name exist"""
         from models import storage
-        user = storage.get(attr=input_farm_name, cls=Business)
+        user = storage.get(input_farm_name, cls=Business)
         if user:
             raise ValidationError('Farm name already exist')
 
